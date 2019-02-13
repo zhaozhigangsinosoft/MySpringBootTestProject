@@ -15,12 +15,15 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -47,10 +50,10 @@ public class WaCaiServiceImpl implements WaCaiService {
 
 	private void exportExcel(ArrayList<WacaiAccountVo> wacaiAccountVoList
 			, HttpServletResponse response) {
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		XSSFWorkbook workbook = new XSSFWorkbook();
         //创建一个Excel表单,参数为sheet的名字
-        HSSFSheet sheet1 = workbook.createSheet("支出");
-        HSSFSheet sheet2 = workbook.createSheet("收入");
+		XSSFSheet sheet1 = workbook.createSheet("支出");
+		XSSFSheet sheet2 = workbook.createSheet("收入");
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -63,7 +66,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         int rowNum2 = 1;
         for (WacaiAccountVo wacaiAccountVo:wacaiAccountVoList) {
         	if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
-        		HSSFRow row = sheet1.createRow(rowNum1);
+        		XSSFRow row = sheet1.createRow(rowNum1);
         		int index = 0;
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getExpenditureCategories());
@@ -81,8 +84,15 @@ public class WaCaiServiceImpl implements WaCaiService {
         				wacaiAccountVo.getReimbursement());
         		row.createCell(index++).setCellValue(
         				sdf.format(wacaiAccountVo.getConsumptionDate()));
-        		row.createCell(index++).setCellValue(
-        				wacaiAccountVo.getConsumptionAmount().toString());
+        		
+        		XSSFCell cell = row.createCell(index++);
+        		XSSFDataFormat df = workbook.createDataFormat();
+        		XSSFCellStyle contextstyle =workbook.createCellStyle();
+        		contextstyle.setDataFormat(df.getFormat("#,##0.00"));
+        		cell.setCellStyle(contextstyle);
+        		cell.setCellValue(
+        				wacaiAccountVo.getConsumptionAmount().doubleValue());
+        		
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getMemberAmount());
         		row.createCell(index++).setCellValue(
@@ -91,7 +101,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         				wacaiAccountVo.getAccountBook());
         		rowNum1++;
         	}else if(wacaiAccountVo.getCollectionOrSupport().equals("收入")) {
-           		HSSFRow row = sheet2.createRow(rowNum2);
+           		XSSFRow row = sheet2.createRow(rowNum2);
         		int index = 0;
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getExpenditureCategories());
@@ -104,8 +114,13 @@ public class WaCaiServiceImpl implements WaCaiService {
         		row.createCell(index++).setCellValue("");
         		row.createCell(index++).setCellValue(
         				sdf.format(wacaiAccountVo.getConsumptionDate()));
-        		row.createCell(index++).setCellValue(
-        				wacaiAccountVo.getConsumptionAmount().toString());
+        		XSSFCell cell = row.createCell(index++);
+        		XSSFDataFormat df = workbook.createDataFormat();
+        		XSSFCellStyle contextstyle =workbook.createCellStyle();
+        		contextstyle.setDataFormat(df.getFormat("#,##0.00"));
+        		cell.setCellStyle(contextstyle);
+        		cell.setCellValue(
+        				wacaiAccountVo.getConsumptionAmount().doubleValue());
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getMemberAmount());
         		row.createCell(index++).setCellValue(
@@ -115,7 +130,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         		rowNum2++;
         	}
         }
-        String fileName = "exportWacaiAccount"+sdf.format(new Date())+".xls";
+        String fileName = "exportWacaiAccount_"+sdf.format(new Date())+".xlsx";
         //清空response  
         response.reset();  
         //设置response的Header  
@@ -146,8 +161,8 @@ public class WaCaiServiceImpl implements WaCaiService {
 		}
 	}
 	
-	private void setTitle1(HSSFWorkbook workbook, HSSFSheet sheet){
-        HSSFRow row = sheet.createRow(0);
+	private void setTitle1(XSSFWorkbook workbook, XSSFSheet sheet){
+        XSSFRow row = sheet.createRow(0);
         //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
         int index = 0;
         sheet.setColumnWidth(index++, 10*256);
@@ -164,13 +179,13 @@ public class WaCaiServiceImpl implements WaCaiService {
         sheet.setColumnWidth(index++, 10*256);
 
         //设置为居中加粗
-        HSSFCellStyle style = workbook.createCellStyle();
-        HSSFFont font = workbook.createFont();
+        XSSFCellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
         font.setBold(true);
-        font.setColor(HSSFFont.COLOR_RED);
+        font.setColor(XSSFFont.COLOR_RED);
         style.setFont(font);
 
-        HSSFCell cell;
+        XSSFCell cell;
         index = 0;
         cell = row.createCell(index++);
         cell.setCellValue("支出大类");
@@ -209,8 +224,8 @@ public class WaCaiServiceImpl implements WaCaiService {
         cell.setCellValue("账本");
         cell.setCellStyle(style);
     }
-	private void setTitle2(HSSFWorkbook workbook, HSSFSheet sheet){
-		HSSFRow row = sheet.createRow(0);
+	private void setTitle2(XSSFWorkbook workbook, XSSFSheet sheet){
+		XSSFRow row = sheet.createRow(0);
 		//设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
 		int index = 0;
 		sheet.setColumnWidth(index++, 10*256);
@@ -225,13 +240,13 @@ public class WaCaiServiceImpl implements WaCaiService {
 		sheet.setColumnWidth(index++, 10*256);
 		
 		//设置为居中加粗
-		HSSFCellStyle style = workbook.createCellStyle();
-		HSSFFont font = workbook.createFont();
+		XSSFCellStyle style = workbook.createCellStyle();
+		XSSFFont font = workbook.createFont();
 		font.setBold(true);
-		font.setColor(HSSFFont.COLOR_RED);
+		font.setColor(XSSFFont.COLOR_RED);
 		style.setFont(font);
 		
-		HSSFCell cell;
+		XSSFCell cell;
 		index = 0;
 		cell = row.createCell(index++);
 		cell.setCellValue("收入大类");
