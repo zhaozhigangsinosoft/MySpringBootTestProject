@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.sinosoft.reins.MySpringBootTestProject.web.dao.RiBaoMapper">
-  <resultMap id="BaseResultMap" type="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.RiBao">
+<mapper namespace="cn.ribao.dao.RiBaoMapper">
+  <resultMap id="BaseResultMap" type="cn.ribao.po.RiBao">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="work_date" jdbcType="TIMESTAMP" property="workDate" />
@@ -29,7 +29,7 @@
 		      #{item.remark,jdbcType=VARCHAR})
 		</foreach>
 	</insert>  
-  <insert id="insert" parameterType="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.RiBao">
+  <insert id="insert" parameterType="cn.ribao.po.RiBao">
     insert into ri_bao (id, name, work_date, 
       task_type, task_no, work_content, 
       work_hour, real_hour, project_name, 
@@ -39,7 +39,7 @@
       #{workHour,jdbcType=DECIMAL}, #{realHour,jdbcType=DECIMAL}, #{projectName,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.RiBao">
+  <insert id="insertSelective" parameterType="cn.ribao.po.RiBao">
     insert into ri_bao
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

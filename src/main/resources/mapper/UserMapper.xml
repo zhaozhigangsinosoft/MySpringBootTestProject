@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.sinosoft.reins.MySpringBootTestProject.web.dao.UserMapper">
-  <resultMap id="BaseResultMap" type="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.User">
+<mapper namespace="cn.test.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.test.po.User">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -18,13 +18,13 @@
   <select id = "queryPage" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	select * from user limit #{startIndex},#{endIndex}
   </select>
-  <insert id="insert" parameterType="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.User">
+  <insert id="insert" parameterType="cn.test.po.User">
     insert into user (id, user_name, password
       )
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.com.sinosoft.reins.MySpringBootTestProject.web.po.User">
+  <insert id="insertSelective" parameterType="cn.test.po.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
