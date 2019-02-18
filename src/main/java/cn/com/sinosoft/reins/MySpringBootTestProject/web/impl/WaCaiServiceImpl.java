@@ -2,6 +2,7 @@ package cn.com.sinosoft.reins.MySpringBootTestProject.web.impl;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,9 +10,12 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,8 +42,25 @@ public class WaCaiServiceImpl implements WaCaiService {
 	@Override
 	public ArrayList<WacaiAccountVo> convertExcel(String filePath
 			, HttpServletResponse response) {
+		String accountFileName = null;
+		try {
+			ArrayList<File> fileList = this.getFiles(filePath);
+			for (Iterator<File> iterator = fileList.iterator(); 
+					iterator.hasNext();) {
+				File file = (File) iterator.next();
+				String fileName = file.getName();
+				if(this.isReg(fileName, "^微信支付账单.+\\.csv$")) {
+					accountFileName = file.getPath();
+					break;
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			return null;
+		}
+		
 		ArrayList<WeixinAccountVo> weixinAccountVoList 
-				= this.readFile(filePath);
+				= this.readFile(accountFileName);
 		ArrayList<WacaiAccountVo> wacaiAccountVoList 
 				= this.convertList(weixinAccountVoList);
 		this.exportExcel(wacaiAccountVoList,response);
@@ -335,7 +356,38 @@ public class WaCaiServiceImpl implements WaCaiService {
 	
 	private void recognitionType(WeixinAccountVo weixinAccountVo,
 			WacaiAccountVo wacaiAccountVo) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(weixinAccountVo.getTransactionTime());
+		int hour=calendar.get(Calendar.HOUR_OF_DAY);
 		if(weixinAccountVo.getCollectionOrSupport().equals("支出")) {
+			if(this.isReg(weixinAccountVo.getTradingParty(), 
+					"^.*(出门人|王军|申广涛|太阳).*$")||
+					this.isReg(weixinAccountVo.getCommodity(), 
+							"^.*(饭|肉|面|米|鱼|菜|美团).*$")
+					) {
+				wacaiAccountVo.setExpenditureCategories("餐饮");
+				if(hour>=6&&hour<=9) {
+					wacaiAccountVo.setExpenditureCategory("早餐");
+				}else if(hour>=10&&hour<=14) {
+					wacaiAccountVo.setExpenditureCategory("午餐");
+				}else if(hour>=15&&hour<=20) {
+					wacaiAccountVo.setExpenditureCategory("晚餐");
+				}
+			}
+			if(this.isReg(weixinAccountVo.getTradingParty(),
+					"^.*(超市|冀中小武).*$")) {
+				wacaiAccountVo.setExpenditureCategories("购物");
+				wacaiAccountVo.setExpenditureCategory("家居百货");
+			}
+			if(this.isReg(weixinAccountVo.getTradingParty(),
+					"^.*(李志杰).*$")) {
+				wacaiAccountVo.setExpenditureCategories("居家");
+				wacaiAccountVo.setExpenditureCategory("美发美容");
+			}
+			if(this.isReg(weixinAccountVo.getCommodity(), "^.*(摩摩哒).*$")) {
+				wacaiAccountVo.setExpenditureCategories("娱乐");
+				wacaiAccountVo.setExpenditureCategory("娱乐其他");
+			}
 			if(weixinAccountVo.getCommodity().contains("滴滴打车")) {
 				wacaiAccountVo.setExpenditureCategories("交通");
 				wacaiAccountVo.setExpenditureCategory("打车");
@@ -355,16 +407,6 @@ public class WaCaiServiceImpl implements WaCaiService {
 			if(weixinAccountVo.getCommodity().contains("顺丰")) {
 				wacaiAccountVo.setExpenditureCategories("居家");
 				wacaiAccountVo.setExpenditureCategory("快递邮政");
-			}
-			if(weixinAccountVo.getCommodity().contains("饭")||
-					weixinAccountVo.getCommodity().contains("肉")||
-					weixinAccountVo.getCommodity().contains("面")||
-					weixinAccountVo.getCommodity().contains("米")||
-					weixinAccountVo.getCommodity().contains("鱼")||
-					weixinAccountVo.getCommodity().contains("菜")||
-					weixinAccountVo.getCommodity().contains("美团")) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				wacaiAccountVo.setExpenditureCategory("午餐");
 			}
 			if("\"亲密付\"".equals(weixinAccountVo.getCommodity())) {
 				wacaiAccountVo.setExpenditureCategories("人情");
@@ -415,7 +457,7 @@ public class WaCaiServiceImpl implements WaCaiService {
 					weixinAccountVo.setRemarks(splitLines[index++]);
 					accountVoList.add(weixinAccountVo);
 				}
-				if(line.startsWith("交易时间")) {
+				if(!startFlag&&line.startsWith("交易时间")) {
 					startFlag = true;
 				}
 			}
@@ -424,5 +466,31 @@ public class WaCaiServiceImpl implements WaCaiService {
 		}
 		return accountVoList;
 	}
-
+	
+	private boolean isReg(String value , String patternString){
+		Pattern pattern = Pattern.compile(patternString);
+        Matcher result = pattern.matcher(value);
+        if( !result.matches() ){
+            return false;
+        }
+        return true;
+	}
+	
+	private ArrayList<File> getFiles(String path) throws Exception {
+		ArrayList<File> fileList = new ArrayList<File>();
+		File file = new File(path);
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			for (File fileIndex : files) {
+				// 如果这个文件是目录，则进行递归搜索
+				if (fileIndex.isDirectory()) {
+					fileList.addAll(getFiles(fileIndex.getPath()));
+				} else {
+					// 如果文件是普通文件，则将文件句柄放入集合中
+					fileList.add(fileIndex);
+				}
+			}
+		}
+		return fileList;
+	}
 }

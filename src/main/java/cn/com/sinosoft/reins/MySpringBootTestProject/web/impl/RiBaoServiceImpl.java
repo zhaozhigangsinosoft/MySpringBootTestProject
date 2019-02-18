@@ -143,7 +143,8 @@ public class RiBaoServiceImpl implements RiBaoService {
 			for (File fileIndex : files) {
 				// 如果这个文件是目录，则进行递归搜索
 				if (fileIndex.isDirectory()) {
-					getFiles(fileIndex.getPath());
+					//如果是需要包含子目录，则用下面这句
+					//fileList.add(getFiles(fileIndex.getPath()));
 				} else {
 					// 如果文件是普通文件，则将文件句柄放入集合中
 					fileList.add(fileIndex);
