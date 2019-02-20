@@ -3,7 +3,7 @@ params:
   ribao:
      filepath: D:\SVN_Folder\天津SVN\Management(管理库)\SPTO(项目跟踪)\项目日报\2019
   wacai:
-     filepath: C:\Users\ZhaoZhigang\Downloads
+     filepath: D:\account
 
 server:
   port: 8081

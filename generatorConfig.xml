@@ -18,7 +18,7 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!--生成Model类存放位置-->
-        <javaModelGenerator targetPackage="cn.com.sinosoft.reins.MySpringBootTestProject.web.po" 
+        <javaModelGenerator targetPackage="cn.ribao.po" 
         		targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
@@ -29,7 +29,7 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.com.sinosoft.reins.MySpringBootTestProject.web.dao" 
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.ribao.dao" 
         		targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>

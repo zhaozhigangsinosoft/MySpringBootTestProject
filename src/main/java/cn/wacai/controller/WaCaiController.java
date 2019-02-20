@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.wacai.service.AlipayService;
 import cn.wacai.service.WaCaiService;
+import cn.wacai.service.WeixinService;
 import cn.wacai.vo.WacaiAccountVo;
 
 @RestController
@@ -26,14 +28,21 @@ public class WaCaiController {
 	private WaCaiService waCaiService;
 	
 	@Autowired
+	private WeixinService weixinService;
+	
+	@Autowired
+	private AlipayService alipayService;
+	
+	@Autowired
 	private HttpServletResponse response;
 	
 	@RequestMapping(value = "/convert")
 	public String convertExcel() {
-		@SuppressWarnings("unused")
-		ArrayList<WacaiAccountVo> accountVos = null;
+		ArrayList<WacaiAccountVo> accountVos = new ArrayList<>();
 		try {
-			accountVos = waCaiService.convertExcel(filePath,response);
+			accountVos.addAll(weixinService.convertExcel(filePath));
+			accountVos.addAll(alipayService.convertExcel(filePath));
+			waCaiService.exportExcel(accountVos, response);
 		} catch (Exception e2) {
 			logger.error(e2.getMessage(),e2);
 			return "failed";
