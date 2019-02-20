@@ -2,13 +2,13 @@ package cn.wacai.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -45,14 +45,10 @@ public class WeixinServiceImpl implements WeixinService {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			return null;
 		}
 		
 		return wacaiAccountVoList;
 	}
-	
-	
-
 
 	private ArrayList<WacaiAccountVo> convertList(
 			ArrayList<WeixinAccountVo> weixinAccountVoList) {
@@ -69,8 +65,14 @@ public class WeixinServiceImpl implements WeixinService {
 				weixinAccountVoList.iterator();iterator.hasNext();) {
 			WeixinAccountVo weixinAccountVo = iterator.next();
 			WacaiAccountVo wacaiAccountVo = new WacaiAccountVo();
+			
 			wacaiAccountVo.setCollectionOrSupport(
 					weixinAccountVo.getCollectionOrSupport());
+			wacaiAccountVo.setTradingParty(
+					weixinAccountVo.getTradingParty());
+			wacaiAccountVo.setCommodity(
+					weixinAccountVo.getCommodity());
+			
 			wacaiAccountVo.setExpenditureCategories("居家");
 			wacaiAccountVo.setExpenditureCategory("漏记款");
 			if(weixinAccountVo.getCollectionOrSupport().equals("支出")) {
@@ -102,103 +104,11 @@ public class WeixinServiceImpl implements WeixinService {
 					);
 			wacaiAccountVo.setAccountBook("日常账本");
 			
-			this.recognitionType(weixinAccountVo, wacaiAccountVo);
-			
 			wacaiAccountVoList.add(wacaiAccountVo);
 		}
 		return wacaiAccountVoList;
 	}
 	
-	private void recognitionType(WeixinAccountVo weixinAccountVo,
-			WacaiAccountVo wacaiAccountVo) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(weixinAccountVo.getTransactionTime());
-		int hour=calendar.get(Calendar.HOUR_OF_DAY);
-		if(weixinAccountVo.getCollectionOrSupport().equals("支出")) {
-			if(RegTest.test(weixinAccountVo.getTradingParty(), 
-					"^.*(出门人|王军|申广涛|太阳|餐饮|板面|小树林水煮鱼|"
-					+ "张记酱牛肉|烤全鱼|锅包肉|老胜香|橘和柠|心语|回头一看|梦|周志伟|张金梁|王思铭|"
-					+ "为了生活而奋斗|吉野家|金/鑫).*$")||
-					RegTest.test(weixinAccountVo.getCommodity(), 
-							"^.*(饭|肉|面|米|鱼|菜|美团).*$")
-					) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				if(hour>=6&&hour<=10) {
-					wacaiAccountVo.setExpenditureCategory("早餐");
-				}else if(hour>=11&&hour<=15) {
-					wacaiAccountVo.setExpenditureCategory("午餐");
-				}else if(hour>=16&&hour<=23) {
-					wacaiAccountVo.setExpenditureCategory("晚餐");
-				}
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(超市|冀中小武).*$")) {
-				wacaiAccountVo.setExpenditureCategories("购物");
-				wacaiAccountVo.setExpenditureCategory("家居百货");
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(李志杰).*$")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("美发美容");
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(铂涛).*$")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("住宿房租");
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(李记副食调料|刘进|利达鲜切面|李延辉|"
-					+ "彩丽市场大刀凉皮|大名府任记香油坊|天津京东网络销售群，王礼状|"
-					+ "花自飘零水自流|幸运的人|朱家烘培|任我行|锋哥|梅英|恭喜发财).*$")) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				wacaiAccountVo.setExpenditureCategory("买菜原料");
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(好人，彩丽园店).*$")) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				wacaiAccountVo.setExpenditureCategory("饮料水果");
-			}
-			if(RegTest.test(weixinAccountVo.getTradingParty(),
-					"^.*(等待绽放胖子干货).*$")) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				wacaiAccountVo.setExpenditureCategory("零食");
-			}
-			if(RegTest.test(weixinAccountVo.getCommodity(), "^.*(摩摩哒).*$")) {
-				wacaiAccountVo.setExpenditureCategories("娱乐");
-				wacaiAccountVo.setExpenditureCategory("娱乐其他");
-			}
-			if(weixinAccountVo.getCommodity().contains("滴滴")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("打车");
-			}
-			if(weixinAccountVo.getCommodity().contains("单车")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("自行车");
-			}
-			if(weixinAccountVo.getCommodity().contains("12306")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("火车");
-			}
-			if(weixinAccountVo.getCommodity().contains("中国联通")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("电脑宽带");
-			}
-			if(RegTest.test(weixinAccountVo.getCommodity(),
-					"^.*(顺丰|邮政).*$")||
-					RegTest.test(weixinAccountVo.getTradingParty(),
-							"^.*(菜鸟驿站).*$")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("快递邮政");
-			}
-			if("\"亲密付\"".equals(weixinAccountVo.getCommodity())) {
-				wacaiAccountVo.setExpenditureCategories("人情");
-				wacaiAccountVo.setExpenditureCategory("代付款");
-			}
-		}else {
-			wacaiAccountVo.setExpenditureCategories("退款返款");
-		}
-	}
-
 	private ArrayList<WeixinAccountVo> readFile(String filePath) {
 		
 		boolean startFlag = false;
@@ -206,16 +116,14 @@ public class WeixinServiceImpl implements WeixinService {
 				= new ArrayList<WeixinAccountVo>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		try (FileReader reader = new FileReader(filePath);
-			 BufferedReader br = new BufferedReader(reader) 
-			 // 建立一个对象，它把文件内容转成计算机能读懂的语言
-		) {
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"UTF-8"));
 			String line;
 			// 网友推荐更加简洁的写法
 			while ((line = br.readLine()) != null) {
 				// 一次读入一行数据
 				if(startFlag) {
-					logger.info(line);
 					int index = 0;
 					WeixinAccountVo weixinAccountVo= new WeixinAccountVo();
 					String[] splitLines = line.split(",");
@@ -223,6 +131,7 @@ public class WeixinServiceImpl implements WeixinService {
 						weixinAccountVo.setTransactionTime(
 								sdf.parse(splitLines[index++]));
 					} catch (ParseException e) {
+						logger.error("TransactionTime保存失败");
 						logger.error(e.getMessage(),e);
 					}
 					weixinAccountVo.setTransactionType(splitLines[index++]);
@@ -245,6 +154,11 @@ public class WeixinServiceImpl implements WeixinService {
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+			}
 		}
 		return accountVoList;
 	}

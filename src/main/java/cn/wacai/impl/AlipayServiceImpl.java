@@ -2,13 +2,13 @@ package cn.wacai.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 import cn.util.FileUtils;
 import cn.util.RegTest;
 import cn.wacai.service.AlipayService;
-import cn.wacai.vo.WacaiAccountVo;
 import cn.wacai.vo.AlipayAccountVo;
+import cn.wacai.vo.WacaiAccountVo;
 
 @Service
 public class AlipayServiceImpl implements AlipayService {
@@ -45,14 +45,10 @@ public class AlipayServiceImpl implements AlipayService {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			return null;
 		}
 		
 		return wacaiAccountVoList;
 	}
-	
-	
-
 
 	private ArrayList<WacaiAccountVo> convertList(
 			ArrayList<AlipayAccountVo> alipayAccountVoList) {
@@ -71,8 +67,14 @@ public class AlipayServiceImpl implements AlipayService {
 			if(RegTest.test(alipayAccountVo.getCollectionOrSupport(), 
 					"^.*(支出|收入).*$")) {
 				WacaiAccountVo wacaiAccountVo = new WacaiAccountVo();
+				
 				wacaiAccountVo.setCollectionOrSupport(
 						alipayAccountVo.getCollectionOrSupport());
+				wacaiAccountVo.setTradingParty(
+						alipayAccountVo.getTradingParty());
+				wacaiAccountVo.setCommodity(
+						alipayAccountVo.getTradeName());
+				
 				wacaiAccountVo.setExpenditureCategories("居家");
 				wacaiAccountVo.setExpenditureCategory("漏记款");
 				wacaiAccountVo.setAccount("XX支付宝");
@@ -91,81 +93,10 @@ public class AlipayServiceImpl implements AlipayService {
 						alipayAccountVo.getAmount().toString()
 						);
 				wacaiAccountVo.setAccountBook("日常账本");
-				
-				this.recognitionType(alipayAccountVo, wacaiAccountVo);
-				
 				wacaiAccountVoList.add(wacaiAccountVo);
 			}
 		}
 		return wacaiAccountVoList;
-	}
-	
-	private void recognitionType(AlipayAccountVo alipayAccountVo,
-			WacaiAccountVo wacaiAccountVo) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(alipayAccountVo.getTransactionCreationTime());
-		int hour=calendar.get(Calendar.HOUR_OF_DAY);
-		if(alipayAccountVo.getCollectionOrSupport().equals("支出")) {
-			if(RegTest.test(alipayAccountVo.getTradingParty(), 
-					"^.*(出门人|王军|申广涛|太阳).*$")||
-					RegTest.test(alipayAccountVo.getTradeName(), 
-							"^.*(饭|肉|面|米|鱼|菜|美团).*$")
-					) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				if(hour>=6&&hour<=9) {
-					wacaiAccountVo.setExpenditureCategory("早餐");
-				}else if(hour>=10&&hour<=14) {
-					wacaiAccountVo.setExpenditureCategory("午餐");
-				}else if(hour>=15&&hour<=20) {
-					wacaiAccountVo.setExpenditureCategory("晚餐");
-				}
-			}
-			if(RegTest.test(alipayAccountVo.getTradingParty(),
-					"^.*(超市|冀中小武).*$")) {
-				wacaiAccountVo.setExpenditureCategories("购物");
-				wacaiAccountVo.setExpenditureCategory("家居百货");
-			}
-			if(RegTest.test(alipayAccountVo.getTradingParty(),
-					"^.*(李志杰).*$")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("美发美容");
-			}
-			if(RegTest.test(alipayAccountVo.getTradingParty(),
-					"^.*(李记副食调料|刘进).*$")) {
-				wacaiAccountVo.setExpenditureCategories("餐饮");
-				wacaiAccountVo.setExpenditureCategory("买菜原料");
-			}
-			if(RegTest.test(alipayAccountVo.getTradeName(), "^.*(摩摩哒).*$")) {
-				wacaiAccountVo.setExpenditureCategories("娱乐");
-				wacaiAccountVo.setExpenditureCategory("娱乐其他");
-			}
-			if(alipayAccountVo.getTradeName().contains("滴滴打车")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("打车");
-			}
-			if(alipayAccountVo.getTradeName().contains("单车")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("自行车");
-			}
-			if(alipayAccountVo.getTradeName().contains("12306")) {
-				wacaiAccountVo.setExpenditureCategories("交通");
-				wacaiAccountVo.setExpenditureCategory("火车");
-			}
-			if(alipayAccountVo.getTradeName().contains("中国联通")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("电脑宽带");
-			}
-			if(alipayAccountVo.getTradeName().contains("顺丰")) {
-				wacaiAccountVo.setExpenditureCategories("居家");
-				wacaiAccountVo.setExpenditureCategory("快递邮政");
-			}
-			if("\"亲密付\"".equals(alipayAccountVo.getTradeName())) {
-				wacaiAccountVo.setExpenditureCategories("人情");
-				wacaiAccountVo.setExpenditureCategory("代付款");
-			}
-		}else {
-			wacaiAccountVo.setExpenditureCategories("退款返款");
-		}
 	}
 
 	private ArrayList<AlipayAccountVo> readFile(String filePath) {
@@ -173,18 +104,19 @@ public class AlipayServiceImpl implements AlipayService {
 		boolean startFlag = false;
 		ArrayList<AlipayAccountVo> accountVoList 
 				= new ArrayList<AlipayAccountVo>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		try (FileReader reader = new FileReader(filePath);
-			 BufferedReader br = new BufferedReader(reader) 
-			 // 建立一个对象，它把文件内容转成计算机能读懂的语言
-		) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"GBK"));
 			String line;
 			// 网友推荐更加简洁的写法
 			while ((line = br.readLine()) != null) {
 				// 一次读入一行数据
+				line = line.replaceAll(" ", "").replaceAll("	", "");
+				if(line.startsWith("----------------------------------------")) {
+					startFlag = false;
+				}
 				if(startFlag) {
-					logger.info(line);
 					int index = 0;
 					AlipayAccountVo alipayAccountVo= new AlipayAccountVo();
 					String[] splitLines = line.split(",");
@@ -194,19 +126,20 @@ public class AlipayServiceImpl implements AlipayService {
 						alipayAccountVo.setTransactionCreationTime(
 								sdf.parse(splitLines[index++]));
 					} catch (ParseException e) {
+						logger.error("TransactionCreationTime保存失败");
 						logger.error(e.getMessage(),e);
 					}
 					try {
 						alipayAccountVo.setPaymentTime(
 								sdf.parse(splitLines[index++]));
 					} catch (ParseException e) {
-						logger.error(e.getMessage(),e);
+						logger.warn("PaymentTime保存失败");
 					}
 					try {
 						alipayAccountVo.setLatestRevisionTime(
 								sdf.parse(splitLines[index++]));
 					} catch (ParseException e) {
-						logger.error(e.getMessage(),e);
+						logger.warn("LatestRevisionTime保存失败");
 					}
 					alipayAccountVo.setSourceOfTransaction(splitLines[index++]);
 					alipayAccountVo.setType(splitLines[index++]);
@@ -220,8 +153,6 @@ public class AlipayServiceImpl implements AlipayService {
 							new BigDecimal(splitLines[index++]));
 					alipayAccountVo.setSuccessfulRefund(
 							new BigDecimal(splitLines[index++]));
-					alipayAccountVo.setRemarks(splitLines[index++]);
-					alipayAccountVo.setFundStatus(splitLines[index++]);
 					accountVoList.add(alipayAccountVo);
 				}
 				if(!startFlag&&line.startsWith("交易号")) {
@@ -230,6 +161,11 @@ public class AlipayServiceImpl implements AlipayService {
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+			}
 		}
 		return accountVoList;
 	}

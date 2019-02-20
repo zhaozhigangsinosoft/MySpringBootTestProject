@@ -42,6 +42,7 @@ public class WaCaiController {
 		try {
 			accountVos.addAll(weixinService.convertExcel(filePath));
 			accountVos.addAll(alipayService.convertExcel(filePath));
+			waCaiService.recognitionType(accountVos);
 			waCaiService.exportExcel(accountVos, response);
 		} catch (Exception e2) {
 			logger.error(e2.getMessage(),e2);

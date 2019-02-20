@@ -31,7 +31,23 @@ public class WacaiAccountVo {
 	
 	//收/支
 	private String collectionOrSupport;
+	//交易对方
+	private String tradingParty;
+	//商品
+	private String commodity;
 	
+	public String getTradingParty() {
+		return tradingParty;
+	}
+	public void setTradingParty(String tradingParty) {
+		this.tradingParty = tradingParty;
+	}
+	public String getCommodity() {
+		return commodity;
+	}
+	public void setCommodity(String commodity) {
+		this.commodity = commodity;
+	}
 	public String getCollectionOrSupport() {
 		return collectionOrSupport;
 	}

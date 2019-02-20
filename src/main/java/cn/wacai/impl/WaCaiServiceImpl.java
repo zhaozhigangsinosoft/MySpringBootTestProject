@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import cn.util.RegTest;
 import cn.wacai.service.WaCaiService;
 import cn.wacai.vo.WacaiAccountVo;
 
@@ -258,6 +261,124 @@ public class WaCaiServiceImpl implements WaCaiService {
 		cell = row.createCell(index++);
 		cell.setCellValue("账本");
 		cell.setCellStyle(style);
+	}
+
+	@Override
+	public void recognitionType(ArrayList<WacaiAccountVo> accountVos) {
+		for (Iterator<WacaiAccountVo> iterator = accountVos.iterator(); iterator.hasNext();) {
+			WacaiAccountVo wacaiAccountVo = (WacaiAccountVo) iterator.next();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(wacaiAccountVo.getConsumptionDate());
+			int hour=calendar.get(Calendar.HOUR_OF_DAY);
+			if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
+				if(RegTest.test(wacaiAccountVo.getTradingParty(), 
+						"^.*(出门人|王军|申广涛|太阳|餐饮|板面|小树林水煮鱼|"
+								+ "张记酱牛肉|烤全鱼|锅包肉|老胜香|橘和柠|心语|回头一看|梦|周志伟|张金梁|王思铭|"
+								+ "为了生活而奋斗|吉野家|金/鑫).*$")||
+						RegTest.test(wacaiAccountVo.getCommodity(), 
+								"^.*(饭|肉|面|米|鱼|菜|美团).*$")
+						) {
+					wacaiAccountVo.setExpenditureCategories("餐饮");
+					if(hour>=6&&hour<=10) {
+						wacaiAccountVo.setExpenditureCategory("早餐");
+					}else if(hour>=11&&hour<=15) {
+						wacaiAccountVo.setExpenditureCategory("午餐");
+					}else if(hour>=16&&hour<=23) {
+						wacaiAccountVo.setExpenditureCategory("晚餐");
+					}
+				}
+				
+				//根据交易对方判断交易类型
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(超市|冀中小武|家具).*$")) {
+					wacaiAccountVo.setExpenditureCategories("购物");
+					wacaiAccountVo.setExpenditureCategory("家居百货");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(李志杰).*$")) {
+					wacaiAccountVo.setExpenditureCategories("居家");
+					wacaiAccountVo.setExpenditureCategory("美发美容");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(铂涛).*$")) {
+					wacaiAccountVo.setExpenditureCategories("居家");
+					wacaiAccountVo.setExpenditureCategory("住宿房租");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(李记副食调料|刘进|利达鲜切面|李延辉|"
+								+ "彩丽市场大刀凉皮|大名府任记香油坊|王礼状|"
+								+ "花自飘零水自流|幸运的人|朱家烘培|任我行|锋哥|梅英|恭喜发财).*$")) {
+					wacaiAccountVo.setExpenditureCategories("餐饮");
+					wacaiAccountVo.setExpenditureCategory("买菜原料");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(好人，彩丽园店|果生鲜).*$")) {
+					wacaiAccountVo.setExpenditureCategories("餐饮");
+					wacaiAccountVo.setExpenditureCategory("饮料水果");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(等待绽放胖子干货).*$")) {
+					wacaiAccountVo.setExpenditureCategories("餐饮");
+					wacaiAccountVo.setExpenditureCategory("零食");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(公交).*$")) {
+					wacaiAccountVo.setExpenditureCategories("交通");
+					wacaiAccountVo.setExpenditureCategory("公交");
+				}
+				
+				//根据商品名称判断交易类型
+				if(RegTest.test(wacaiAccountVo.getCommodity(), "^.*(摩摩哒).*$")) {
+					wacaiAccountVo.setExpenditureCategories("娱乐");
+					wacaiAccountVo.setExpenditureCategory("娱乐其他");
+				}
+				if(wacaiAccountVo.getCommodity().contains("滴滴")) {
+					wacaiAccountVo.setExpenditureCategories("交通");
+					wacaiAccountVo.setExpenditureCategory("打车");
+				}
+				if(RegTest.test(wacaiAccountVo.getCommodity(),
+						"^.*(地铁).*$")) {
+					wacaiAccountVo.setExpenditureCategories("交通");
+					wacaiAccountVo.setExpenditureCategory("地铁");
+				}
+				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+						"^.*(水果).*$")) {
+					wacaiAccountVo.setExpenditureCategories("餐饮");
+					wacaiAccountVo.setExpenditureCategory("饮料水果");
+				}
+				if(RegTest.test(wacaiAccountVo.getCommodity(),
+						"^.*(鲜花).*$")) {
+					wacaiAccountVo.setExpenditureCategories("人情");
+					wacaiAccountVo.setExpenditureCategory("物品");
+				}
+				if(RegTest.test(wacaiAccountVo.getCommodity(),
+						"^.*(哈啰|单车).*$")) {
+					wacaiAccountVo.setExpenditureCategories("交通");
+					wacaiAccountVo.setExpenditureCategory("自行车");
+				}
+				if(wacaiAccountVo.getCommodity().contains("12306")) {
+					wacaiAccountVo.setExpenditureCategories("交通");
+					wacaiAccountVo.setExpenditureCategory("火车");
+				}
+				if(wacaiAccountVo.getCommodity().contains("中国联通")) {
+					wacaiAccountVo.setExpenditureCategories("居家");
+					wacaiAccountVo.setExpenditureCategory("电脑宽带");
+				}
+				if(RegTest.test(wacaiAccountVo.getCommodity(),
+						"^.*(顺丰|邮政).*$")||
+						RegTest.test(wacaiAccountVo.getTradingParty(),
+								"^.*(菜鸟驿站).*$")) {
+					wacaiAccountVo.setExpenditureCategories("居家");
+					wacaiAccountVo.setExpenditureCategory("快递邮政");
+				}
+				if("\"亲密付\"".equals(wacaiAccountVo.getCommodity())) {
+					wacaiAccountVo.setExpenditureCategories("人情");
+					wacaiAccountVo.setExpenditureCategory("代付款");
+				}
+			}else {
+				wacaiAccountVo.setExpenditureCategories("退款返款");
+			}
+		}
 	}
 	
 }
