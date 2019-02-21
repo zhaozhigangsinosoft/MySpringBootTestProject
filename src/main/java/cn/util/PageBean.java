@@ -3,6 +3,12 @@ package cn.util;
 
 import java.util.List;
 
+/**
+ * 分页工具类
+ * @author ZhaoZhigang
+ *
+ * @param <T>
+ */
 public class PageBean<T> {
     // 当前页
     private Integer currentPage = 1;

@@ -48,7 +48,7 @@ public class WeixinServiceImpl implements WeixinService {
 				File file = (File) iterator.next();
 				String fileName = file.getName();
 				//遍历所有文件名，如果是微信账本的规则，则进行解析处理
-				if(RegTest.test(fileName, "^微信支付账单.+\\.csv$")) {
+				if(RegTest.match(fileName, "^微信支付账单.+\\.csv$")) {
 					accountFileName = file.getPath();
 					ArrayList<WeixinAccountVo> weixinAccountVoList 
 							= this.readFile(accountFileName);
@@ -83,7 +83,7 @@ public class WeixinServiceImpl implements WeixinService {
 				weixinAccountVoList.iterator();iterator.hasNext();) {
 			WeixinAccountVo weixinAccountVo = iterator.next();
 			//仅对交易类型为收入或支出的数据进行处理
-			if(RegTest.test(weixinAccountVo.getCollectionOrSupport(), 
+			if(RegTest.match(weixinAccountVo.getCollectionOrSupport(), 
 					"^.*(支出|收入).*$")) {
 				WacaiAccountVo wacaiAccountVo = new WacaiAccountVo();
 				

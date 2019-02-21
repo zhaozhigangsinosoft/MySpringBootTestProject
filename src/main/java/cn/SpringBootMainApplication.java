@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Bean;
 
 import com.github.pagehelper.PageHelper;
 
+/**
+ * 项目启动服务类
+ * @author ZhaoZhigang
+ *
+ */
 @SpringBootApplication
 @MapperScan("cn.*.dao") 
 public class SpringBootMainApplication {

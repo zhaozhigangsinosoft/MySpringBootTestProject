@@ -307,12 +307,12 @@ public class WaCaiServiceImpl implements WaCaiService {
 			int hour=calendar.get(Calendar.HOUR_OF_DAY);
 			if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
 				//当对象为包含以下字符时，为一日三餐，需要根据交易时间判断早中晚
-				if(RegTest.test(wacaiAccountVo.getTradingParty(), 
+				if(RegTest.match(wacaiAccountVo.getTradingParty(), 
 						"^.*(出门人|王军|申广涛|太阳|餐饮|板面|小树林水煮鱼|"
 								+ "张记酱牛肉|烤全鱼|锅包肉|老胜香|橘和柠|心语|回头一看|"
 								+ "梦|周志伟|张金梁|王思铭|"
 								+ "为了生活而奋斗|吉野家|金/鑫).*$")||
-						RegTest.test(wacaiAccountVo.getCommodity(), 
+						RegTest.match(wacaiAccountVo.getCommodity(), 
 								"^.*(饭|肉|面|米|鱼|菜|美团).*$")
 						) {
 					wacaiAccountVo.setExpenditureCategories("餐饮");
@@ -326,46 +326,46 @@ public class WaCaiServiceImpl implements WaCaiService {
 				}
 				
 				//根据交易对方判断交易类型
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(超市|冀中小武|家具).*$")) {
 					wacaiAccountVo.setExpenditureCategories("购物");
 					wacaiAccountVo.setExpenditureCategory("家居百货");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(李志杰).*$")) {
 					wacaiAccountVo.setExpenditureCategories("居家");
 					wacaiAccountVo.setExpenditureCategory("美发美容");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(铂涛).*$")) {
 					wacaiAccountVo.setExpenditureCategories("居家");
 					wacaiAccountVo.setExpenditureCategory("住宿房租");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(李记副食调料|刘进|利达鲜切面|李延辉|"
 								+ "彩丽市场大刀凉皮|大名府任记香油坊|王礼状|"
 								+ "花自飘零水自流|幸运的人|朱家烘培|任我行|锋哥|梅英|恭喜发财).*$")) {
 					wacaiAccountVo.setExpenditureCategories("餐饮");
 					wacaiAccountVo.setExpenditureCategory("买菜原料");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(好人，彩丽园店|果生鲜).*$")) {
 					wacaiAccountVo.setExpenditureCategories("餐饮");
 					wacaiAccountVo.setExpenditureCategory("饮料水果");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(等待绽放胖子干货).*$")) {
 					wacaiAccountVo.setExpenditureCategories("餐饮");
 					wacaiAccountVo.setExpenditureCategory("零食");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(公交).*$")) {
 					wacaiAccountVo.setExpenditureCategories("交通");
 					wacaiAccountVo.setExpenditureCategory("公交");
 				}
 				
 				//根据商品名称判断交易类型
-				if(RegTest.test(wacaiAccountVo.getCommodity(),
+				if(RegTest.match(wacaiAccountVo.getCommodity(),
 						"^.*(摩摩哒).*$")) {
 					wacaiAccountVo.setExpenditureCategories("娱乐");
 					wacaiAccountVo.setExpenditureCategory("娱乐其他");
@@ -374,22 +374,22 @@ public class WaCaiServiceImpl implements WaCaiService {
 					wacaiAccountVo.setExpenditureCategories("交通");
 					wacaiAccountVo.setExpenditureCategory("打车");
 				}
-				if(RegTest.test(wacaiAccountVo.getCommodity(),
+				if(RegTest.match(wacaiAccountVo.getCommodity(),
 						"^.*(地铁).*$")) {
 					wacaiAccountVo.setExpenditureCategories("交通");
 					wacaiAccountVo.setExpenditureCategory("地铁");
 				}
-				if(RegTest.test(wacaiAccountVo.getTradingParty(),
+				if(RegTest.match(wacaiAccountVo.getTradingParty(),
 						"^.*(水果).*$")) {
 					wacaiAccountVo.setExpenditureCategories("餐饮");
 					wacaiAccountVo.setExpenditureCategory("饮料水果");
 				}
-				if(RegTest.test(wacaiAccountVo.getCommodity(),
+				if(RegTest.match(wacaiAccountVo.getCommodity(),
 						"^.*(鲜花).*$")) {
 					wacaiAccountVo.setExpenditureCategories("人情");
 					wacaiAccountVo.setExpenditureCategory("物品");
 				}
-				if(RegTest.test(wacaiAccountVo.getCommodity(),
+				if(RegTest.match(wacaiAccountVo.getCommodity(),
 						"^.*(哈啰|单车).*$")) {
 					wacaiAccountVo.setExpenditureCategories("交通");
 					wacaiAccountVo.setExpenditureCategory("自行车");
@@ -402,9 +402,9 @@ public class WaCaiServiceImpl implements WaCaiService {
 					wacaiAccountVo.setExpenditureCategories("居家");
 					wacaiAccountVo.setExpenditureCategory("电脑宽带");
 				}
-				if(RegTest.test(wacaiAccountVo.getCommodity(),
+				if(RegTest.match(wacaiAccountVo.getCommodity(),
 						"^.*(顺丰|邮政).*$")||
-						RegTest.test(wacaiAccountVo.getTradingParty(),
+						RegTest.match(wacaiAccountVo.getTradingParty(),
 								"^.*(菜鸟驿站).*$")) {
 					wacaiAccountVo.setExpenditureCategories("居家");
 					wacaiAccountVo.setExpenditureCategory("快递邮政");

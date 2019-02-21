@@ -47,7 +47,7 @@ public class AlipayServiceImpl implements AlipayService {
 				File file = (File) iterator.next();
 				String fileName = file.getName();
 				//遍历所有文件名，如果是支付宝账本的规则，则进行解析处理
-				if(RegTest.test(fileName, "^alipay_record.+\\.csv$")) {
+				if(RegTest.match(fileName, "^alipay_record.+\\.csv$")) {
 					accountFileName = file.getPath();
 					ArrayList<AlipayAccountVo> alipayAccountVoList 
 							= this.readFile(accountFileName);
@@ -76,7 +76,7 @@ public class AlipayServiceImpl implements AlipayService {
 				alipayAccountVoList.iterator();iterator.hasNext();) {
 			AlipayAccountVo alipayAccountVo = iterator.next();
 			//仅对交易类型为收入或支出的数据进行处理
-			if(RegTest.test(alipayAccountVo.getCollectionOrSupport(), 
+			if(RegTest.match(alipayAccountVo.getCollectionOrSupport(), 
 					"^.*(支出|收入).*$")) {
 				WacaiAccountVo wacaiAccountVo = new WacaiAccountVo();
 				

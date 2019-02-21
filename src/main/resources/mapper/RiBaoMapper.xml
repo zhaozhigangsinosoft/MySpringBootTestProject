@@ -13,9 +13,11 @@
     <result column="project_name" jdbcType="VARCHAR" property="projectName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
+<!--   删除所有日报记录 -->
   <delete id = "deleteAll">
   	delete from ri_bao
   </delete>
+<!--   一次性插入集合中所有日报记录 -->
 	<insert id="insertAll">
 	  insert into ri_bao (id, name, work_date, 
 	      task_type, task_no, work_content, 
@@ -29,6 +31,8 @@
 		      #{item.remark,jdbcType=VARCHAR})
 		</foreach>
 	</insert>  
+	
+<!--   插入单个日报记录 -->
   <insert id="insert" parameterType="cn.ribao.po.RiBao">
     insert into ri_bao (id, name, work_date, 
       task_type, task_no, work_content, 
@@ -39,6 +43,7 @@
       #{workHour,jdbcType=DECIMAL}, #{realHour,jdbcType=DECIMAL}, #{projectName,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
+<!--   插入单个日报记录，仅选择非字字段进行插入 -->
   <insert id="insertSelective" parameterType="cn.ribao.po.RiBao">
     insert into ri_bao
     <trim prefix="(" suffix=")" suffixOverrides=",">

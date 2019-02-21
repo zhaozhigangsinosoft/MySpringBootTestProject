@@ -16,6 +16,11 @@ import cn.wacai.service.WaCaiService;
 import cn.wacai.service.WeixinService;
 import cn.wacai.vo.WacaiAccountVo;
 
+/**
+ * 账本转换功能控制器类
+ * @author ZhaoZhigang
+ *
+ */
 @RestController
 @RequestMapping("/wacai")
 public class WaCaiController {
@@ -37,6 +42,10 @@ public class WaCaiController {
 	@Autowired
 	private HttpServletResponse response;
 	
+	/**
+	 * 转换账本文件请求服务
+	 * @return
+	 */
 	@RequestMapping(value = "/convert")
 	public String convertExcel() {
 		ArrayList<WacaiAccountVo> accountVos = new ArrayList<>();
@@ -48,7 +57,12 @@ public class WaCaiController {
 			//根据交易对方和交易商品等信息判断交易类型
 			waCaiService.recognitionType(accountVos);
 			//将挖财账本对象转换为excel下载
-			waCaiService.exportExcel(accountVos, response);
+			if(!accountVos.isEmpty()) {
+				waCaiService.exportExcel(accountVos, response);
+			}else {
+				return "no records!";
+			}
+			
 		} catch (Exception e2) {
 			//如果转换发生异常则返回失败
 			logger.error(e2.getMessage(),e2);
