@@ -8,7 +8,7 @@
 		<version>2.1.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>cn.com.sinosoft.reins</groupId>
+	<groupId>cn.zhaozhigang.TestSpringBoot</groupId>
 	<artifactId>MySpringBootTestProject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MySpringBootTestProject</name>
@@ -90,6 +90,12 @@
 		    <artifactId>poi-ooxml</artifactId>
 		    <version>RELEASE</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 		
 	</dependencies>
 

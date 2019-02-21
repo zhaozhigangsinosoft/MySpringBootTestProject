@@ -26,30 +26,44 @@ import cn.util.RegTest;
 import cn.wacai.service.WaCaiService;
 import cn.wacai.vo.WacaiAccountVo;
 
+/**
+ * 挖财账本文件处理服务接口实现类
+ * @author ZhaoZhigang
+ *
+ */
 @Service
 public class WaCaiServiceImpl implements WaCaiService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * 将挖财账本文件列表转换为excel文件并存到response中进行下载
+	 * @param wacaiAccountVoList
+	 * @param response
+	 */
 	@Override
 	public void exportExcel(ArrayList<WacaiAccountVo> wacaiAccountVoList
 			, HttpServletResponse response) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-        //创建一个Excel表单,参数为sheet的名字
-		XSSFSheet sheet1 = workbook.createSheet("支出");
-		XSSFSheet sheet2 = workbook.createSheet("收入");
+        //创建支出sheet页
+		XSSFSheet sheetSupport = workbook.createSheet("支出");
+		//创建收入sheet页
+		XSSFSheet sheetCollection = workbook.createSheet("收入");
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        //创建表头
-        setTitle1(workbook, sheet1);
-        setTitle2(workbook, sheet2);
+        //创建支出页表头
+        this.setTitleSupport(workbook, sheetSupport);
+        //创建收入页表头
+        this.setTitleCollection(workbook, sheetCollection);
 
-        //新增数据行，并且设置单元格数据
-        int rowNum1 = 1;
-        int rowNum2 = 1;
+        //定义支出页行索引
+        int rowNumSupport = 1;
+        //定义收入页行索引
+        int rowNumCollection = 1;
         for (WacaiAccountVo wacaiAccountVo:wacaiAccountVoList) {
         	if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
-        		XSSFRow row = sheet1.createRow(rowNum1);
+        		//如果对象收支属性为支出，则按支出页格式设置表格数据
+        		XSSFRow row = sheetSupport.createRow(rowNumSupport);
         		int index = 0;
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getExpenditureCategories());
@@ -67,7 +81,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         				wacaiAccountVo.getReimbursement());
         		row.createCell(index++).setCellValue(
         				sdf.format(wacaiAccountVo.getConsumptionDate()));
-        		
+        		//设置交易金额单元格格式
         		XSSFCell cell = row.createCell(index++);
         		XSSFDataFormat df = workbook.createDataFormat();
         		XSSFCellStyle contextstyle =workbook.createCellStyle();
@@ -82,9 +96,10 @@ public class WaCaiServiceImpl implements WaCaiService {
         				wacaiAccountVo.getRemarks());
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getAccountBook());
-        		rowNum1++;
+        		rowNumSupport++;
         	}else if(wacaiAccountVo.getCollectionOrSupport().equals("收入")) {
-           		XSSFRow row = sheet2.createRow(rowNum2);
+        		//如果对象收支属性为支出，则按支出页格式设置表格数据
+        		XSSFRow row = sheetCollection.createRow(rowNumCollection);
         		int index = 0;
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getExpenditureCategories());
@@ -97,6 +112,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         		row.createCell(index++).setCellValue("");
         		row.createCell(index++).setCellValue(
         				sdf.format(wacaiAccountVo.getConsumptionDate()));
+        		//设置交易金额单元格格式
         		XSSFCell cell = row.createCell(index++);
         		XSSFDataFormat df = workbook.createDataFormat();
         		XSSFCellStyle contextstyle =workbook.createCellStyle();
@@ -110,9 +126,10 @@ public class WaCaiServiceImpl implements WaCaiService {
         				wacaiAccountVo.getRemarks());
         		row.createCell(index++).setCellValue(
         				wacaiAccountVo.getAccountBook());
-        		rowNum2++;
+        		rowNumCollection++;
         	}
         }
+        //以当前时间命名导出的账本文件
         String fileName = "exportWacaiAccount_"+sdf.format(new Date())+".xlsx";
         //清空response  
         response.reset();  
@@ -144,7 +161,12 @@ public class WaCaiServiceImpl implements WaCaiService {
 		}
 	}
 	
-	private void setTitle1(XSSFWorkbook workbook, XSSFSheet sheet){
+	/**
+	 * 设置支出页表头
+	 * @param workbook
+	 * @param sheet
+	 */
+	private void setTitleSupport(XSSFWorkbook workbook, XSSFSheet sheet){
         XSSFRow row = sheet.createRow(0);
         //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
         int index = 0;
@@ -161,7 +183,7 @@ public class WaCaiServiceImpl implements WaCaiService {
         sheet.setColumnWidth(index++, 50*256);
         sheet.setColumnWidth(index++, 10*256);
 
-        //设置为居中加粗
+        //设置为居中加粗，红色
         XSSFCellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
         font.setBold(true);
@@ -207,7 +229,13 @@ public class WaCaiServiceImpl implements WaCaiService {
         cell.setCellValue("账本");
         cell.setCellStyle(style);
     }
-	private void setTitle2(XSSFWorkbook workbook, XSSFSheet sheet){
+	
+	/**
+	 * 设置收入页表头
+	 * @param workbook
+	 * @param sheet
+	 */
+	private void setTitleCollection(XSSFWorkbook workbook, XSSFSheet sheet){
 		XSSFRow row = sheet.createRow(0);
 		//设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
 		int index = 0;
@@ -222,7 +250,7 @@ public class WaCaiServiceImpl implements WaCaiService {
 		sheet.setColumnWidth(index++, 50*256);
 		sheet.setColumnWidth(index++, 10*256);
 		
-		//设置为居中加粗
+		//设置为居中加粗，红色
 		XSSFCellStyle style = workbook.createCellStyle();
 		XSSFFont font = workbook.createFont();
 		font.setBold(true);
@@ -263,17 +291,26 @@ public class WaCaiServiceImpl implements WaCaiService {
 		cell.setCellStyle(style);
 	}
 
+	/**
+	 * 据交易对方和交易商品等信息判断交易类型
+	 * @param accountVos
+	 */
 	@Override
 	public void recognitionType(ArrayList<WacaiAccountVo> accountVos) {
-		for (Iterator<WacaiAccountVo> iterator = accountVos.iterator(); iterator.hasNext();) {
+		for (Iterator<WacaiAccountVo> iterator = accountVos.iterator();
+				iterator.hasNext();) {
 			WacaiAccountVo wacaiAccountVo = (WacaiAccountVo) iterator.next();
+			//根据交易时间生成日历对象
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(wacaiAccountVo.getConsumptionDate());
+			//定义交易时间的小时，用于后面的逻辑判断
 			int hour=calendar.get(Calendar.HOUR_OF_DAY);
 			if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
+				//当对象为包含以下字符时，为一日三餐，需要根据交易时间判断早中晚
 				if(RegTest.test(wacaiAccountVo.getTradingParty(), 
 						"^.*(出门人|王军|申广涛|太阳|餐饮|板面|小树林水煮鱼|"
-								+ "张记酱牛肉|烤全鱼|锅包肉|老胜香|橘和柠|心语|回头一看|梦|周志伟|张金梁|王思铭|"
+								+ "张记酱牛肉|烤全鱼|锅包肉|老胜香|橘和柠|心语|回头一看|"
+								+ "梦|周志伟|张金梁|王思铭|"
 								+ "为了生活而奋斗|吉野家|金/鑫).*$")||
 						RegTest.test(wacaiAccountVo.getCommodity(), 
 								"^.*(饭|肉|面|米|鱼|菜|美团).*$")
@@ -328,7 +365,8 @@ public class WaCaiServiceImpl implements WaCaiService {
 				}
 				
 				//根据商品名称判断交易类型
-				if(RegTest.test(wacaiAccountVo.getCommodity(), "^.*(摩摩哒).*$")) {
+				if(RegTest.test(wacaiAccountVo.getCommodity(),
+						"^.*(摩摩哒).*$")) {
 					wacaiAccountVo.setExpenditureCategories("娱乐");
 					wacaiAccountVo.setExpenditureCategory("娱乐其他");
 				}

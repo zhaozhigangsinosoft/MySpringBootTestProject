@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -22,25 +21,38 @@ import cn.wacai.service.AlipayService;
 import cn.wacai.vo.AlipayAccountVo;
 import cn.wacai.vo.WacaiAccountVo;
 
+/**
+ * 支付宝账本转换服务接口实现类
+ * @author ZhaoZhigang
+ *
+ */
 @Service
 public class AlipayServiceImpl implements AlipayService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * 将路径中的支付宝账本文件转换为挖财账本对象列表
+	 * @param filePath
+	 * @return ArrayList<WacaiAccountVo>
+	 */
 	@Override
 	public ArrayList<WacaiAccountVo> convertExcel(String filePath) {
 		String accountFileName = null;
 		ArrayList<WacaiAccountVo> wacaiAccountVoList = new ArrayList<>();
 		try {
+			//迭代获取路径下所有文件
 			ArrayList<File> fileList = FileUtils.getFiles(filePath,true);
 			for (Iterator<File> iterator = fileList.iterator(); 
 					iterator.hasNext();) {
 				File file = (File) iterator.next();
 				String fileName = file.getName();
+				//遍历所有文件名，如果是支付宝账本的规则，则进行解析处理
 				if(RegTest.test(fileName, "^alipay_record.+\\.csv$")) {
 					accountFileName = file.getPath();
 					ArrayList<AlipayAccountVo> alipayAccountVoList 
 							= this.readFile(accountFileName);
-					wacaiAccountVoList.addAll(this.convertList(alipayAccountVoList));
+					wacaiAccountVoList.addAll(
+							this.convertList(alipayAccountVoList));
 				}
 			}
 		} catch (Exception e) {
@@ -50,20 +62,20 @@ public class AlipayServiceImpl implements AlipayService {
 		return wacaiAccountVoList;
 	}
 
+	/**
+	 * 将支付宝账本对象列表转换为挖财账本对象列表，并做初步对象赋值
+	 * @param alipayAccountVoList
+	 * @return ArrayList<WacaiAccountVo>
+	 */
 	private ArrayList<WacaiAccountVo> convertList(
 			ArrayList<AlipayAccountVo> alipayAccountVoList) {
-		
-		HashMap<String,String> accountMap = new HashMap<>();
-		accountMap.put("浦发银行(3337)", "XX浦发银行储蓄卡");
-		accountMap.put("招商银行(7038)", "XX招行信用卡");
-		accountMap.put("零钱通", "xx微信");
-		accountMap.put("零钱", "xx微信");
 		
 		ArrayList<WacaiAccountVo> wacaiAccountVoList 
 				= new ArrayList<WacaiAccountVo>();
 		for (Iterator<AlipayAccountVo> iterator = 
 				alipayAccountVoList.iterator();iterator.hasNext();) {
 			AlipayAccountVo alipayAccountVo = iterator.next();
+			//仅对交易类型为收入或支出的数据进行处理
 			if(RegTest.test(alipayAccountVo.getCollectionOrSupport(), 
 					"^.*(支出|收入).*$")) {
 				WacaiAccountVo wacaiAccountVo = new WacaiAccountVo();
@@ -93,29 +105,40 @@ public class AlipayServiceImpl implements AlipayService {
 						alipayAccountVo.getAmount().toString()
 						);
 				wacaiAccountVo.setAccountBook("日常账本");
+				//处理完毕后将对象添加到返回列表中
 				wacaiAccountVoList.add(wacaiAccountVo);
 			}
 		}
 		return wacaiAccountVoList;
 	}
 
+	/**
+	 * 从csv文件中读取支付宝账本，转换为支付宝账本对象列表
+	 * @param filePath
+	 * @return ArrayList<AlipayAccountVo>
+	 */
 	private ArrayList<AlipayAccountVo> readFile(String filePath) {
-		
+		//定义一个标识，需要解析此行数据时设置为true,否则为false
 		boolean startFlag = false;
 		ArrayList<AlipayAccountVo> accountVoList 
 				= new ArrayList<AlipayAccountVo>();
+		//由于后面需要替换所有空格为空，因此这里的日期格式里也去掉了空格
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"GBK"));
+			br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(filePath),"GBK"));
 			String line;
-			// 网友推荐更加简洁的写法
+			// 逐行遍历文件内容，一次读入一行数据
 			while ((line = br.readLine()) != null) {
-				// 一次读入一行数据
+				// 先将空格和制表位替换为空
 				line = line.replaceAll(" ", "").replaceAll("	", "");
-				if(line.startsWith("----------------------------------------")) {
+				// 遍历到横线行时，说明账本数据已经结束，将标识设置为false,不再进行解析,跳出循环
+				if(line.startsWith("------------------------------------")) {
 					startFlag = false;
+					break;
 				}
+				//标识为true，正式开始解析账单数据
 				if(startFlag) {
 					int index = 0;
 					AlipayAccountVo alipayAccountVo= new AlipayAccountVo();
@@ -155,6 +178,8 @@ public class AlipayServiceImpl implements AlipayService {
 							new BigDecimal(splitLines[index++]));
 					accountVoList.add(alipayAccountVo);
 				}
+				//“交易号”开头的下一行，账本数据文件正式开始，
+				//将标识设置为true,下次循环开始解析
 				if(!startFlag&&line.startsWith("交易号")) {
 					startFlag = true;
 				}
@@ -162,6 +187,7 @@ public class AlipayServiceImpl implements AlipayService {
 		} catch (IOException e) {
 			logger.error(e.getMessage(),e);
 		} finally {
+			//关闭bufferReader
 			try {
 				br.close();
 			} catch (IOException e) {
