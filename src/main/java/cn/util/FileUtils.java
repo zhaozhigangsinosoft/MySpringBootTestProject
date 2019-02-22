@@ -1,6 +1,7 @@
 package cn.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -34,4 +35,17 @@ public class FileUtils {
 		}
 		return fileList;
 	}
+
+    /**
+     * 判断文件是否存在，如果不存在则新建
+     * 
+     * @param filePath 文件路径
+     * @throws IOException 
+     */
+    public static void createNewFile(String filePath) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+			file.createNewFile();
+        }
+    }
 }
