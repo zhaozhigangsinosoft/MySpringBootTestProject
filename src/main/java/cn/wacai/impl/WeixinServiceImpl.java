@@ -141,11 +141,11 @@ public class WeixinServiceImpl implements WeixinService {
 		boolean startFlag = false;
 		ArrayList<WeixinAccountVo> accountVoList 
 				= new ArrayList<WeixinAccountVo>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"UTF-8"));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"GBK"));
 			String line;
 			// 逐行遍历文件内容，一次读入一行数据
 			while ((line = br.readLine()) != null) {
@@ -153,6 +153,7 @@ public class WeixinServiceImpl implements WeixinService {
 				if(startFlag) {
 					int index = 0;
 					WeixinAccountVo weixinAccountVo= new WeixinAccountVo();
+					line = line.replaceAll("	", ",");
 					String[] splitLines = line.split(",");
 					try {
 						weixinAccountVo.setTransactionTime(
@@ -167,7 +168,7 @@ public class WeixinServiceImpl implements WeixinService {
 					weixinAccountVo.setCollectionOrSupport(
 							splitLines[index++]);
 					weixinAccountVo.setAmount(new BigDecimal(
-							splitLines[index++].replaceAll("¥", "")));
+							splitLines[index++].replaceAll("\\?", "")));
 					weixinAccountVo.setPaymentMethod(splitLines[index++]);
 					weixinAccountVo.setCurrentState(splitLines[index++]);
 					weixinAccountVo.setTransactionNumber(splitLines[index++]); 
