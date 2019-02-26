@@ -86,9 +86,12 @@ public class AlipayServiceImpl implements AlipayService {
                         alipayAccountVo.getTradingParty());
                 wacaiAccountVo.setCommodity(
                         alipayAccountVo.getTradeName());
-                
-                wacaiAccountVo.setExpenditureCategories("居家");
-                wacaiAccountVo.setExpenditureCategory("漏记款");
+                if(alipayAccountVo.getCollectionOrSupport().equals("收入")) {
+                    wacaiAccountVo.setExpenditureCategories("退款返款");
+                }else {
+                    wacaiAccountVo.setExpenditureCategories("居家");
+                    wacaiAccountVo.setExpenditureCategory("漏记款");
+                }
                 wacaiAccountVo.setAccount("XX支付宝");
                 wacaiAccountVo.setMemberAmount("自己:"+
                         alipayAccountVo.getAmount().toString());

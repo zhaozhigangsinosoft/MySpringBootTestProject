@@ -107,6 +107,7 @@ public class WeixinServiceImpl implements WeixinService {
                                 weixinAccountVo.getAmount().toString());
                     }
                 }else {
+                    wacaiAccountVo.setExpenditureCategories("退款返款");
                     wacaiAccountVo.setAccount("xx微信");
                     wacaiAccountVo.setMemberAmount("家庭公用:"+
                             weixinAccountVo.getAmount().toString());
@@ -141,11 +142,11 @@ public class WeixinServiceImpl implements WeixinService {
         boolean startFlag = false;
         ArrayList<WeixinAccountVo> accountVoList 
                 = new ArrayList<WeixinAccountVo>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"GBK"));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath),"UTF-8"));
             String line;
             // 逐行遍历文件内容，一次读入一行数据
             while ((line = br.readLine()) != null) {
@@ -153,7 +154,7 @@ public class WeixinServiceImpl implements WeixinService {
                 if(startFlag) {
                     int index = 0;
                     WeixinAccountVo weixinAccountVo= new WeixinAccountVo();
-                    line = line.replaceAll("\t", ",");
+                    //line = line.replaceAll("\t", ",");
                     String[] splitLines = line.split(",");
                     try {
                         weixinAccountVo.setTransactionTime(
@@ -168,7 +169,7 @@ public class WeixinServiceImpl implements WeixinService {
                     weixinAccountVo.setCollectionOrSupport(
                             splitLines[index++]);
                     weixinAccountVo.setAmount(new BigDecimal(
-                            splitLines[index++].replaceAll("\\?", "")));
+                            splitLines[index++].replaceAll("¥", "")));
                     weixinAccountVo.setPaymentMethod(splitLines[index++]);
                     weixinAccountVo.setCurrentState(splitLines[index++]);
                     weixinAccountVo.setTransactionNumber(splitLines[index++]); 

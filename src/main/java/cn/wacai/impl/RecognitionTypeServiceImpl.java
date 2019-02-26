@@ -141,6 +141,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType8.setExpenditureCategories("交通");
             wacaiAccountVoType8.setExpenditureCategory("火车");
             commodityMap.put("12306", wacaiAccountVoType8);
+            commodityMap.put("火车票", wacaiAccountVoType8);
             
             WacaiAccountVo wacaiAccountVoType9= new WacaiAccountVo();
             wacaiAccountVoType9.setExpenditureCategories("居家");
@@ -218,6 +219,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("为了生活而奋斗", wacaiAccountVoType2);
             tradingPartyMap.put("吉野家", wacaiAccountVoType2);
             tradingPartyMap.put("金/鑫", wacaiAccountVoType2);
+            tradingPartyMap.put("张青橘", wacaiAccountVoType2);
             
             WacaiAccountVo wacaiAccountVoType3= new WacaiAccountVo();
             wacaiAccountVoType3.setExpenditureCategories("购物");
@@ -275,6 +277,11 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType10.setExpenditureCategories("居家");
             wacaiAccountVoType10.setExpenditureCategory("快递邮政");
             tradingPartyMap.put("菜鸟驿站", wacaiAccountVoType10);
+            
+            WacaiAccountVo wacaiAccountVoType11= new WacaiAccountVo();
+            wacaiAccountVoType11.setExpenditureCategories("交通");
+            wacaiAccountVoType11.setExpenditureCategory("打车");
+            tradingPartyMap.put("建亮", wacaiAccountVoType9);
         }
     }
 }
