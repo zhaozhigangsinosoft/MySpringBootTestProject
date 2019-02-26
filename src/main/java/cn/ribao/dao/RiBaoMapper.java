@@ -5,11 +5,11 @@ import java.util.List;
 import cn.ribao.po.RiBao;
 
 public interface RiBaoMapper {
-	/**
-	 * 插入单个日报记录
-	 * @param record
-	 * @return
-	 */
+    /**
+     * 插入单个日报记录
+     * @param record
+     * @return
+     */
     int insert(RiBao record);
 
     /**
@@ -22,11 +22,11 @@ public interface RiBaoMapper {
     /**
      * 删除所有日报记录
      */
-	void deleteAll();
+    void deleteAll();
 
-	/**
-	 * 一次性插入集合中所有日报记录
-	 * @param riBaoList
-	 */
-	void insertAll(List<RiBao> riBaoList);
+    /**
+     * 一次性插入集合中所有日报记录
+     * @param riBaoList
+     */
+    void insertAll(List<RiBao> riBaoList);
 }

@@ -15,5 +15,5 @@ public interface UserMapper {
 
     public List<User> queryAll();
 
-	public int countAll();
+    public int countAll();
 }

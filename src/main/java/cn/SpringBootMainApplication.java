@@ -18,12 +18,12 @@ import com.github.pagehelper.PageHelper;
 @MapperScan("cn.*.dao") 
 public class SpringBootMainApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBootMainApplication.class, args);
-	}
-	
-	
-	//配置mybatis的分页插件pageHelper
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootMainApplication.class, args);
+    }
+    
+    
+    //配置mybatis的分页插件pageHelper
     @Bean
     public PageHelper pageHelper(){
         PageHelper pageHelper = new PageHelper();

@@ -14,16 +14,16 @@ import cn.ribao.service.RiBaoService;
 @RestController
 @RequestMapping("/ribao")
 public class RiBaoController {
-	
-	@Autowired
-	RiBaoService riBaoService;
-	
-	/**
-	 * 项目日报导入数据库请求方法
-	 * @return
-	 */
-	@RequestMapping(value = "/read")
-	public String readExcel() {
-		return riBaoService.readExcel();
-	}
+    
+    @Autowired
+    RiBaoService riBaoService;
+    
+    /**
+     * 项目日报导入数据库请求方法
+     * @return
+     */
+    @RequestMapping(value = "/read")
+    public String readExcel() {
+        return riBaoService.readExcel();
+    }
 }

@@ -6,10 +6,10 @@ package cn.ribao.service;
  */
 public interface RiBaoService {
 
-	/**
-	 * 项目日报导入数据库方法
-	 * @return success/failed
-	 */
-	public String readExcel();
+    /**
+     * 项目日报导入数据库方法
+     * @return success/failed
+     */
+    public String readExcel();
 
 }

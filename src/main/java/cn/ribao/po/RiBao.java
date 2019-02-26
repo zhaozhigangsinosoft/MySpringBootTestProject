@@ -9,25 +9,25 @@ import java.util.Date;
  *
  */
 public class RiBao {
-	/** 主键ID	 */
+    /** 主键ID     */
     private Integer id;
-    /** 姓名	 */
+    /** 姓名     */
     private String name;
-    /** 工作时间	 */
+    /** 工作时间     */
     private Date workDate;
-    /** 任务类型	 */
+    /** 任务类型     */
     private String taskType;
-    /** 任务号	 */
+    /** 任务号     */
     private String taskNo;
-    /** 工作内容	 */
+    /** 工作内容     */
     private String workContent;
-    /** 投入工时	 */
+    /** 投入工时     */
     private BigDecimal workHour;
-    /** 核算工时	 */
+    /** 核算工时     */
     private BigDecimal realHour;
-    /** 项目名称	 */
+    /** 项目名称     */
     private String projectName;
-    /** 备注	 */
+    /** 备注     */
     private String remark;
 
     public Integer getId() {

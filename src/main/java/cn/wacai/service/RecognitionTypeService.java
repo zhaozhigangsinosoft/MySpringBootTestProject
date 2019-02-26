@@ -10,9 +10,9 @@ import cn.wacai.vo.WacaiAccountVo;
  *
  */
 public interface RecognitionTypeService {
-	/**
-	 * 自动识别交易类型方法
-	 * @param accountVos
-	 */
-	public void recognitionType(ArrayList<WacaiAccountVo> accountVos);
+    /**
+     * 自动识别交易类型方法
+     * @param accountVos
+     */
+    public void recognitionType(ArrayList<WacaiAccountVo> accountVos);
 }
