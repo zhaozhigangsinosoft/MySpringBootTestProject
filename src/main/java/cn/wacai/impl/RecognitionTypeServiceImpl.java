@@ -210,6 +210,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("锅包肉", wacaiAccountVoType2);
             tradingPartyMap.put("老胜香", wacaiAccountVoType2);
             tradingPartyMap.put("橘和柠", wacaiAccountVoType2);
+            tradingPartyMap.put("粥", wacaiAccountVoType2);
             tradingPartyMap.put("心语", wacaiAccountVoType2);
             tradingPartyMap.put("回头一看", wacaiAccountVoType2);
             tradingPartyMap.put("梦", wacaiAccountVoType2);
@@ -256,12 +257,16 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("锋哥", wacaiAccountVoType6);
             tradingPartyMap.put("梅英", wacaiAccountVoType6);
             tradingPartyMap.put("恭喜发财", wacaiAccountVoType6);
+            tradingPartyMap.put("鲁自春", wacaiAccountVoType6);
+            tradingPartyMap.put("赵", wacaiAccountVoType6);
+            tradingPartyMap.put("\\*进", wacaiAccountVoType6);
 
             WacaiAccountVo wacaiAccountVoType7= new WacaiAccountVo();
             wacaiAccountVoType7.setExpenditureCategories("餐饮");
             wacaiAccountVoType7.setExpenditureCategory("饮料水果");
             tradingPartyMap.put("好人，彩丽园店", wacaiAccountVoType7);
             tradingPartyMap.put("果生鲜", wacaiAccountVoType7);
+            tradingPartyMap.put("水果", wacaiAccountVoType7);
             
             WacaiAccountVo wacaiAccountVoType8= new WacaiAccountVo();
             wacaiAccountVoType8.setExpenditureCategories("餐饮");
@@ -282,6 +287,11 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType11.setExpenditureCategories("交通");
             wacaiAccountVoType11.setExpenditureCategory("打车");
             tradingPartyMap.put("建亮", wacaiAccountVoType9);
+            
+            WacaiAccountVo wacaiAccountVoType12= new WacaiAccountVo();
+            wacaiAccountVoType12.setExpenditureCategories("居家");
+            wacaiAccountVoType12.setExpenditureCategory("材料建材");
+            tradingPartyMap.put("中州商贸", wacaiAccountVoType9);
         }
     }
 }
