@@ -88,7 +88,7 @@ public class RiBaoServiceImpl implements RiBaoService {
                     iterator.hasNext();) {
                 File file = iterator.next();
                 //如果文件不是xlsx格式的项目日报文件，则扫描下一个文件
-                if(!RegTest.match(file.getName(), "^.*项目日报表.*\\.xlsx$")) {
+                if(!RegTest.match(file.getName(), "^2019项目日报表-.*\\.xlsx$")) {
                     continue;
                 }
                 
@@ -156,15 +156,15 @@ public class RiBaoServiceImpl implements RiBaoService {
                         riBaoList.add(riBao);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 } finally {
                     is.close();
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return riBaoList;
     }
