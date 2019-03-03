@@ -228,6 +228,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("超市", wacaiAccountVoType3);
             tradingPartyMap.put("冀中小武", wacaiAccountVoType3);
             tradingPartyMap.put("家具", wacaiAccountVoType3);
+            tradingPartyMap.put("江", wacaiAccountVoType3);
 
             WacaiAccountVo wacaiAccountVoType4= new WacaiAccountVo();
             wacaiAccountVoType4.setExpenditureCategories("居家");
@@ -260,6 +261,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("鲁自春", wacaiAccountVoType6);
             tradingPartyMap.put("赵", wacaiAccountVoType6);
             tradingPartyMap.put("\\*进", wacaiAccountVoType6);
+            tradingPartyMap.put("世界因你而美", wacaiAccountVoType6);
 
             WacaiAccountVo wacaiAccountVoType7= new WacaiAccountVo();
             wacaiAccountVoType7.setExpenditureCategories("餐饮");
@@ -286,12 +288,24 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             WacaiAccountVo wacaiAccountVoType11= new WacaiAccountVo();
             wacaiAccountVoType11.setExpenditureCategories("交通");
             wacaiAccountVoType11.setExpenditureCategory("打车");
-            tradingPartyMap.put("建亮", wacaiAccountVoType9);
+            tradingPartyMap.put("建亮", wacaiAccountVoType11);
             
             WacaiAccountVo wacaiAccountVoType12= new WacaiAccountVo();
             wacaiAccountVoType12.setExpenditureCategories("居家");
             wacaiAccountVoType12.setExpenditureCategory("材料建材");
-            tradingPartyMap.put("中州商贸", wacaiAccountVoType9);
+            tradingPartyMap.put("中州商贸", wacaiAccountVoType12);
+            
+            WacaiAccountVo wacaiAccountVoType13= new WacaiAccountVo();
+            wacaiAccountVoType13.setExpenditureCategories("购物");
+            wacaiAccountVoType13.setExpenditureCategory("家具家纺");
+            tradingPartyMap.put("窗帘", wacaiAccountVoType13);
+            tradingPartyMap.put("布", wacaiAccountVoType13);
+            
+            WacaiAccountVo wacaiAccountVoType14= new WacaiAccountVo();
+            wacaiAccountVoType14.setExpenditureCategories("医教");
+            wacaiAccountVoType14.setExpenditureCategory("医疗药品");
+            tradingPartyMap.put("药", wacaiAccountVoType14);
+            tradingPartyMap.put("医", wacaiAccountVoType14);
         }
     }
 }
