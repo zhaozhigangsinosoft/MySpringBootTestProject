@@ -38,12 +38,14 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
         for (Iterator<WacaiAccountVo> iterator = accountVos.iterator();
                 iterator.hasNext();) {
             WacaiAccountVo wacaiAccountVo = (WacaiAccountVo) iterator.next();
-            //根据交易对象识别交易类型
-            this.recognitionTradingParty(wacaiAccountVo);
-            //根据商品名称识别交易类型
-            this.recognitionCommodity(wacaiAccountVo);
-            //根据交易时间识别三餐类型
-            this.recognitionHour(wacaiAccountVo);
+            if(wacaiAccountVo.getCollectionOrSupport().equals("支出")) {
+                //根据交易对象识别交易类型
+                this.recognitionTradingParty(wacaiAccountVo);
+                //根据商品名称识别交易类型
+                this.recognitionCommodity(wacaiAccountVo);
+                //根据交易时间识别三餐类型
+                this.recognitionHour(wacaiAccountVo);
+            }
         }
     }
 
@@ -221,6 +223,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("吉野家", wacaiAccountVoType2);
             tradingPartyMap.put("金/鑫", wacaiAccountVoType2);
             tradingPartyMap.put("张青橘", wacaiAccountVoType2);
+            tradingPartyMap.put("\\*占林", wacaiAccountVoType2);
             
             WacaiAccountVo wacaiAccountVoType3= new WacaiAccountVo();
             wacaiAccountVoType3.setExpenditureCategories("购物");
@@ -300,12 +303,20 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType13.setExpenditureCategory("家具家纺");
             tradingPartyMap.put("窗帘", wacaiAccountVoType13);
             tradingPartyMap.put("布", wacaiAccountVoType13);
+            tradingPartyMap.put("绍兴理工学长", wacaiAccountVoType13);
             
             WacaiAccountVo wacaiAccountVoType14= new WacaiAccountVo();
             wacaiAccountVoType14.setExpenditureCategories("医教");
             wacaiAccountVoType14.setExpenditureCategory("医疗药品");
             tradingPartyMap.put("药", wacaiAccountVoType14);
             tradingPartyMap.put("医", wacaiAccountVoType14);
+            
+            WacaiAccountVo wacaiAccountVoType15= new WacaiAccountVo();
+            wacaiAccountVoType15.setExpenditureCategories("居家");
+            wacaiAccountVoType15.setExpenditureCategory("家政服务");
+            tradingPartyMap.put("五八到家平台", wacaiAccountVoType15);
+            tradingPartyMap.put("老婆儿子我的最爱电话13682087515", 
+                    wacaiAccountVoType15);
         }
     }
 }
