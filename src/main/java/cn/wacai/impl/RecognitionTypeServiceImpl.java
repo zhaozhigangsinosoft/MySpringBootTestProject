@@ -161,6 +161,11 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType11.setExpenditureCategory("水电燃气");
             commodityMap.put("电费", wacaiAccountVoType11);
             commodityMap.put("天津津滨威立雅水业有限公司", wacaiAccountVoType11);
+            
+            WacaiAccountVo wacaiAccountVoType12= new WacaiAccountVo();
+            wacaiAccountVoType12.setExpenditureCategories("居家");
+            wacaiAccountVoType12.setExpenditureCategory("材料建材");
+            commodityMap.put("灯管", wacaiAccountVoType12);
         }
     }
 
@@ -202,6 +207,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType2.setExpenditureCategory("三餐");
             tradingPartyMap.put("出门人", wacaiAccountVoType2);
             tradingPartyMap.put("王军", wacaiAccountVoType2);
+            tradingPartyMap.put("幸福不远方", wacaiAccountVoType2);
             tradingPartyMap.put("申广涛", wacaiAccountVoType2);
             tradingPartyMap.put("太阳", wacaiAccountVoType2);
             tradingPartyMap.put("餐饮", wacaiAccountVoType2);
@@ -224,6 +230,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("金/鑫", wacaiAccountVoType2);
             tradingPartyMap.put("张青橘", wacaiAccountVoType2);
             tradingPartyMap.put("\\*占林", wacaiAccountVoType2);
+            tradingPartyMap.put("李兰君", wacaiAccountVoType2);
             
             WacaiAccountVo wacaiAccountVoType3= new WacaiAccountVo();
             wacaiAccountVoType3.setExpenditureCategories("购物");
@@ -263,10 +270,12 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("锋哥", wacaiAccountVoType6);
             tradingPartyMap.put("梅英", wacaiAccountVoType6);
             tradingPartyMap.put("恭喜发财", wacaiAccountVoType6);
+            tradingPartyMap.put("\\*桂华", wacaiAccountVoType6);
             tradingPartyMap.put("鲁自春", wacaiAccountVoType6);
             tradingPartyMap.put("赵", wacaiAccountVoType6);
             tradingPartyMap.put("\\*进", wacaiAccountVoType6);
             tradingPartyMap.put("世界因你而美", wacaiAccountVoType6);
+            tradingPartyMap.put("孟鑫", wacaiAccountVoType6);
 
             WacaiAccountVo wacaiAccountVoType7= new WacaiAccountVo();
             wacaiAccountVoType7.setExpenditureCategories("餐饮");
