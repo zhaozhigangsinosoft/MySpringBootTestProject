@@ -78,15 +78,17 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
         //先初始化根据商品名称转换类型的map
         this.initCommodityMap();
         //遍历map循环使用正则表达式匹配，如果匹配上，则进行赋值，并跳出循环
-        for(String key :commodityMap.keySet()) {
-            if(RegTest.match(wacaiAccountVo.getCommodity(),
-                    "^.*("+key+").*$")) {
-                WacaiAccountVo wacaiAccountVoType = commodityMap.get(key);
-                wacaiAccountVo.setExpenditureCategories(
-                        wacaiAccountVoType.getExpenditureCategories());
-                wacaiAccountVo.setExpenditureCategory(
-                        wacaiAccountVoType.getExpenditureCategory());
-                break;
+        if("漏记款".equals(wacaiAccountVo.getExpenditureCategory())) {
+            for(String key :commodityMap.keySet()) {
+                if(RegTest.match(wacaiAccountVo.getCommodity(),
+                        "^.*("+key+").*$")) {
+                    WacaiAccountVo wacaiAccountVoType = commodityMap.get(key);
+                    wacaiAccountVo.setExpenditureCategories(
+                            wacaiAccountVoType.getExpenditureCategories());
+                    wacaiAccountVo.setExpenditureCategory(
+                            wacaiAccountVoType.getExpenditureCategory());
+                    break;
+                }
             }
         }
     }
@@ -180,7 +182,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
         //遍历map循环使用正则表达式匹配，如果匹配上，则进行赋值，并跳出循环
         for(String key :tradingPartyMap.keySet()) {
             if(RegTest.match(wacaiAccountVo.getTradingParty(),
-                    "^.*("+key+").*$")) {
+                    "^("+key+")$")) {
                 WacaiAccountVo wacaiAccountVoType = tradingPartyMap.get(key);
                 wacaiAccountVo.setExpenditureCategories(
                         wacaiAccountVoType.getExpenditureCategories());
@@ -235,6 +237,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("和合谷", wacaiAccountVoType2);
             tradingPartyMap.put("可可baby", wacaiAccountVoType2);
             tradingPartyMap.put("爱拼才会赢", wacaiAccountVoType2);
+            tradingPartyMap.put("何", wacaiAccountVoType2);
             
             WacaiAccountVo wacaiAccountVoType3= new WacaiAccountVo();
             wacaiAccountVoType3.setExpenditureCategories("购物");
@@ -283,6 +286,8 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("梁慧群", wacaiAccountVoType6);
             tradingPartyMap.put("面条哥", wacaiAccountVoType6);
             tradingPartyMap.put("笑看人生", wacaiAccountVoType6);
+            tradingPartyMap.put("董明峰13821950376", wacaiAccountVoType6);
+            tradingPartyMap.put("杨淑敏", wacaiAccountVoType6);
 
             WacaiAccountVo wacaiAccountVoType7= new WacaiAccountVo();
             wacaiAccountVoType7.setExpenditureCategories("餐饮");
@@ -312,6 +317,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType11.setExpenditureCategories("交通");
             wacaiAccountVoType11.setExpenditureCategory("打车");
             tradingPartyMap.put("建亮", wacaiAccountVoType11);
+            tradingPartyMap.put("滴滴出行", wacaiAccountVoType11);
             
             WacaiAccountVo wacaiAccountVoType12= new WacaiAccountVo();
             wacaiAccountVoType12.setExpenditureCategories("居家");
@@ -337,6 +343,32 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("五八到家平台", wacaiAccountVoType15);
             tradingPartyMap.put("老婆儿子我的最爱电话13682087515", 
                     wacaiAccountVoType15);
+            
+            WacaiAccountVo wacaiAccountVoType16= new WacaiAccountVo();
+            wacaiAccountVoType16.setExpenditureCategories("交通");
+            wacaiAccountVoType16.setExpenditureCategory("地铁");
+            tradingPartyMap.put("深圳市万通顺达科技股份有限公司", wacaiAccountVoType16);
+            tradingPartyMap.put("天津地铁", wacaiAccountVoType16);
+            
+            WacaiAccountVo wacaiAccountVoType17= new WacaiAccountVo();
+            wacaiAccountVoType17.setExpenditureCategories("居家");
+            wacaiAccountVoType17.setExpenditureCategory("保险费");
+            tradingPartyMap.put("中国人民健康保险股份有限公司", wacaiAccountVoType17);
+            
+            WacaiAccountVo wacaiAccountVoType18= new WacaiAccountVo();
+            wacaiAccountVoType18.setExpenditureCategories("购物");
+            wacaiAccountVoType18.setExpenditureCategory("电子数码");
+            tradingPartyMap.put("华为商城", wacaiAccountVoType18);
+            
+            WacaiAccountVo wacaiAccountVoType19= new WacaiAccountVo();
+            wacaiAccountVoType19.setExpenditureCategories("居家");
+            wacaiAccountVoType19.setExpenditureCategory("电脑宽带");
+            tradingPartyMap.put("中国联通", wacaiAccountVoType19);
+            
+            WacaiAccountVo wacaiAccountVoType20= new WacaiAccountVo();
+            wacaiAccountVoType20.setExpenditureCategories("居家");
+            wacaiAccountVoType20.setExpenditureCategory("水电燃气");
+            tradingPartyMap.put("国网天津电力公司（智能表）-电费(自动缴费)", wacaiAccountVoType20);
         }
     }
 }
