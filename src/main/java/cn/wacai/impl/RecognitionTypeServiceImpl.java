@@ -245,7 +245,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             WacaiAccountVo wacaiAccountVoType3= new WacaiAccountVo();
             wacaiAccountVoType3.setExpenditureCategories("购物");
             wacaiAccountVoType3.setExpenditureCategory("家居百货");
-            tradingPartyMap.put("超市", wacaiAccountVoType3);
+            tradingPartyMap.put("福众源", wacaiAccountVoType3);
             tradingPartyMap.put("天津津铁豪邦商业管理有限公司", wacaiAccountVoType3);
             tradingPartyMap.put("冀中小武", wacaiAccountVoType3);
             tradingPartyMap.put("家具", wacaiAccountVoType3);
@@ -294,6 +294,8 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             tradingPartyMap.put("杨淑敏", wacaiAccountVoType6);
             tradingPartyMap.put("\\*亚珍", wacaiAccountVoType6);
             tradingPartyMap.put("\\*卫杰", wacaiAccountVoType6);
+            tradingPartyMap.put("天津", wacaiAccountVoType6);
+            tradingPartyMap.put("\\*宝霞", wacaiAccountVoType6);
 
             WacaiAccountVo wacaiAccountVoType7= new WacaiAccountVo();
             wacaiAccountVoType7.setExpenditureCategories("餐饮");
@@ -373,6 +375,7 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType19.setExpenditureCategories("居家");
             wacaiAccountVoType19.setExpenditureCategory("电脑宽带");
             tradingPartyMap.put("中国联通", wacaiAccountVoType19);
+            tradingPartyMap.put("中国联合网络通信有限公司", wacaiAccountVoType19);
             
             WacaiAccountVo wacaiAccountVoType20= new WacaiAccountVo();
             wacaiAccountVoType20.setExpenditureCategories("居家");
@@ -383,6 +386,11 @@ public class RecognitionTypeServiceImpl implements RecognitionTypeService {
             wacaiAccountVoType21.setExpenditureCategories("购物");
             wacaiAccountVoType21.setExpenditureCategory("宠物用品");
             tradingPartyMap.put("张玄石", wacaiAccountVoType21);
+            
+            WacaiAccountVo wacaiAccountVoType22= new WacaiAccountVo();
+            wacaiAccountVoType22.setExpenditureCategories("交通");
+            wacaiAccountVoType22.setExpenditureCategory("公交");
+            tradingPartyMap.put("天津公交易通科技有限公司", wacaiAccountVoType22);
         }
     }
 }
