@@ -55,7 +55,7 @@ public class WaCaiController {
     @RequestMapping(value = "/convert/{saveType}")
     public String convertExcel(@PathVariable("saveType") String saveType) {
         if(!RegTest.match(saveType, "^(save|download)$")) {
-            return "Error export method!Please inter \"save\""
+            return "Error export method!Please enter \"save\""
                     + " or \"download\" in the URL!";
         }
         
